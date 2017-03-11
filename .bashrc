@@ -1,3 +1,4 @@
+#!/bin/bash
 # =============================================================== #
 #
 # PERSONAL $HOME/.bashrc FILE for bash-3.0 (or later)
