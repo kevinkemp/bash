@@ -293,31 +293,6 @@ function job_color()
 
 # Adds some text in the terminal frame (if applicable).
 
-
-# Now we construct the prompt.
-PROMPT_COMMAND="history -a"
-case ${TERM} in
-  *term | rxvt | linux)
-        PS1="\[\$(load_color)\][\A\[${NC}\] "
-        # Time of day (with load info):
-        PS1="\[\$(load_color)\][\A\[${NC}\] "
-        # User@Host (with connection type info):
-        PS1=${PS1}"\[${SU}\]\u\[${NC}\]@\[${CNX}\]\h\[${NC}\] "
-        # PWD (with 'disk space' info):
-        PS1=${PS1}"\[\$(disk_color)\]\W]\[${NC}\] "
-        # Prompt (with 'job' info):
-        PS1=${PS1}"\[\$(job_color)\]>\[${NC}\] "
-        # Set title of current xterm:
-        PS1=${PS1}"\[\e]0;[\u@\h] \w\a\]"
-        ;;
-    *)
-        PS1="(\A \u@\h \W) > " # --> PS1="(\A \u@\h \w) > "
-                               # --> Shows full pathname of current dir.
-        ;;
-esac
-
-
-
 export TIMEFORMAT=$'\nreal %3R\tuser %3U\tsys %3S\tpcpu %P\n'
 export HISTIGNORE="&:bg:fg:ll:h"
 export HISTTIMEFORMAT="$(echo -e ${BCyan})[%d/%m %H:%M:%S]$(echo -e ${NC}) "
@@ -886,8 +861,6 @@ _make()
 complete -F _make -X '+($*|*.[cho])' make gmake pmake
 
 
-
-
 _killall()
 {
     local cur prev
@@ -907,72 +880,12 @@ _killall()
 
 complete -F _killall killall killps
 
-
-
-# Local Variables:
-# mode:shell-script
-# sh-shell:bash
-# End:
-And, here is a snippet from Andrzej Szelachowski's instructive .bash_profile file.
-
-Example M-2. .bash_profile file
-
-# From Andrzej Szelachowski's ~/.bash_profile:
-
-
-#  Note that a variable may require special treatment
-#+ if it will be exported.
-
-DARKGRAY='\e[1;30m'
-LIGHTRED='\e[1;31m'
-GREEN='\e[32m'
-YELLOW='\e[1;33m'
-LIGHTBLUE='\e[1;34m'
-NC='\e[m'
-
-PCT="\`if [[ \$EUID -eq 0 ]]; then T='$LIGHTRED' ; else T='$LIGHTBLUE'; fi; 
-echo \$T \`"
-
-#  For "literal" command substitution to be assigned to a variable,
-#+ use escapes and double quotes:
-#+       PCT="\` ... \`" . . .
-#  Otherwise, the value of PCT variable is assigned only once,
-#+ when the variable is exported/read from .bash_profile,
-#+ and it will not change afterwards even if the user ID changes.
-
-
-PS1="\n$GREEN[\w] \n$DARKGRAY($PCT\t$DARKGRAY)-($PCT\u$DARKGRAY)-($PCT\!
-$DARKGRAY)$YELLOW-> $NC"
-
-#  Escape a variables whose value changes:
-#        if [[ \$EUID -eq 0 ]],
-#  Otherwise the value of the EUID variable will be assigned only once,
-#+ as above.
-
-#  When a variable is assigned, it should be called escaped:
-#+       echo \$T,
-#  Otherwise the value of the T variable is taken from the moment the PCT 
-#+ variable is exported/read from .bash_profile.
-#  So, in this example it would be null.
-
-#  When a variable's value contains a semicolon it should be strong quoted:
-#        T='$LIGHTRED',
-#  Otherwise, the semicolon will be interpreted as a command separator.
-
-
-#  Variables PCT and PS1 can be merged into a new PS1 variable:
-
-PS1="\`if [[ \$EUID -eq 0 ]]; then PCT='$LIGHTRED';
-else PCT='$LIGHTBLUE'; fi; 
-echo '\n$GREEN[\w] \n$DARKGRAY('\$PCT'\t$DARKGRAY)-\
-('\$PCT'\u$DARKGRAY)-('\$PCT'\!$DARKGRAY)$YELLOW-> $NC'\`"
-
-# The trick is to use strong quoting for parts of old PS1 variable.
-
-# Show current branch if directory is part of git repo
+# Now we construct the prompt.
 
 if [ -f /etc/bash_completion ]; then
   . /etc/bash_completion
 fi
 
-export PS1=${PS1}'\[\033[01;33m\]$(__git_ps1)\[\033[01;34m\] \$\[\033[00m\] '
+PS1='\[\033[0;32m\]\[\033[0m\033[0;32m\]\u\[\033[0;36m\] @ \[\033[0;36m\]\h \w\[\033[0;32m\]$(__git_ps1)\n\[\033[0;32m\]└─\[\033[0m\033[0;32m\] \$\[\033[0m\033[0;32m\] ->\[\033[0m\] '
+
+export PS1
